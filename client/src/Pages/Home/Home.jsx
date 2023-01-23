@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Footer from '../../Components/Foooter/Footer'
 import Navbar from '../../Components/Navbar/Navbar'
 import Preloader from '../../Components/Preloader/Preloader'
@@ -9,6 +9,8 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import { format } from 'date-fns'
 
 function Home() {
+    const navigate=useNavigate()
+    const [destination,setDestination]=useState("")
     const [openDate, setOpenDate] = useState(false)
     const [date, setDate] = useState([
         {
@@ -23,10 +25,15 @@ function Home() {
         childern: 0,
         room: 1
     })
-    const handleOption=(name,operation)=>{
+    const handleOption=(name,operation,e)=>{
+        e.preventDefault()
         setOptions(prev=>{return{
             ...prev,[name]: operation==="i" ? options[name]+1:options[name]-1,
         }})
+    }
+    const handleSearch=(e)=>{
+        e.preventDefault()
+        navigate('/search',{state:{destination,date,options}})
     }
     return (
         <div>
@@ -60,10 +67,11 @@ function Home() {
                                             <span>Location</span>
                                         </div>
                                         <div class="boking-datepicker">
-                                            <input type="text" className='border border-gray-400 max-width-50' />
+                                            <input type="text" value={destination} className='border border-gray-400 max-width-50'onChange={(e)=>setDestination(e.target.value)} />
                                         </div>
                                     </div>
-                                    <div class="boking-tittle mb-12">
+                                    <div class="boking-tittle">
+                                        <span onClick={() => setOpenDate(!openDate)} className="cursor-pointer" >Check in date</span>
                                         <span onClick={() => setOpenDate(!openDate)} className="cursor-pointer">{`${format(date[0].startDate, "MM/dd/yyyy")} to ${format(
                                             date[0].endDate,
                                             "MM/dd/yyyy"
@@ -77,7 +85,8 @@ function Home() {
                                                     onChange={(item) => setDate([item.selection])}
                                                     moveRangeOnFirstSelection={false}
                                                     ranges={date}
-                                                    className="relative top-52" />
+                                                    minDate={new Date()}
+                                                    className="relative top-52 left-52" />
                                             }
                                         </div>
                                     </div>
@@ -86,12 +95,12 @@ function Home() {
                                             <span>{`Adult :${options.adult}`}</span>
                                         </div>
                                         <div class="select-this">
-                                            <form action="#">
+                                            <form action="#"className='text-center'>
                                                 <div class=" top-50 bg-white text-gray-500 rounded-lg shadow-gray-500 flex items-center text-center">
                                                     <span className=''>Adult</span>
-                                                    <button disabled={options.adult<=1} onClick={() => handleOption("adult", "d")} className='border border-gray-700 w-4 h-4 text-center  hover:bg-amber-400 hover:text-white flex items-center m-1 disabled:cursor-not-allowed'>-</button>
+                                                    <button disabled={options.adult<=1} onClick={(e) => handleOption("adult", "d",e)} className='border border-gray-700 w-6 h-6 text-center  hover:bg-amber-400 hover:text-white items-center m-1 disabled:cursor-not-allowed'>-</button>
                                                     <span className=''>{options.adult}</span>
-                                                    <button onClick={() => handleOption("adult", "i")} className='border border-gray-700 w-4 h-4 text-center  hover:bg-amber-400 hover:text-white flex items-center m-1'>+</button>
+                                                    <button onClick={(e) => handleOption("adult", "i",e)} className='border border-gray-700 w-6 h-6 text-center  hover:bg-amber-400 hover:text-white  items-center m-1'>+</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -105,9 +114,9 @@ function Home() {
                                                 <div class="select-itms">
                                                     <div class=" top-50 bg-white text-gray-500 rounded-lg shadow-gray-500 flex items-center text-center">
                                                         <span className=''>Childern</span>
-                                                        <button  disabled={options.childern<=0} onClick={() => handleOption("childern", "d")} className='border border-gray-700 w-4 h-4 text-center  hover:bg-amber-400 hover:text-white flex items-center m-1  disabled:cursor-not-allowed' >-</button>
+                                                        <button  disabled={options.childern<=0} onClick={(e) => handleOption("childern", "d",e)} className='border border-gray-700 w-6 h-6 text-center  hover:bg-amber-400 hover:text-white  items-center m-1  disabled:cursor-not-allowed' >-</button>
                                                         <span className=''>{options.childern}</span>
-                                                        <button onClick={() => handleOption("childern", "i")} className='border border-gray-700 w-4 h-4 text-center  hover:bg-amber-400 hover:text-white flex items-center m-1'>+</button>
+                                                        <button onClick={(e) => handleOption("childern", "i",e)} className='border border-gray-700 w-6 h-6 text-center  hover:bg-amber-400 hover:text-white items-center m-1'>+</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -122,16 +131,16 @@ function Home() {
                                                 <div class="select-itms">
                                                     <div class=" top-50 bg-white text-gray-500 rounded-lg shadow-gray-500 flex items-center text-center">
                                                         <span className=''>Room</span>
-                                                        <button disabled={options.room<=1}onClick={() => handleOption("room", "d")} className='border border-gray-700 w-4 h-4 text-center  hover:bg-amber-400 hover:text-white flex items-center m-1 disabled:cursor-not-allowed'>-</button>
+                                                        <button disabled={options.room<=1}onClick={(e) => handleOption("room", "d",e)} className='border border-gray-700 w-6 h-6 text-center  hover:bg-amber-400 hover:text-white  items-center m-1 disabled:cursor-not-allowed'>-</button>
                                                         <span className=''>{options.room}</span>
-                                                        <button onClick={() => handleOption("room", "i")} className='border border-gray-700 w-4 h-4 text-center  hover:bg-amber-400 hover:text-white flex items-center m-1'>+</button>
+                                                        <button onClick={(e) => handleOption("room", "i",e)} className='border border-gray-700 w-6 h-6 text-center  hover:bg-amber-400 hover:text-white  items-center m-1'>+</button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                     <div class="single-select-box pt-45 mb-30">
-                                        <a href="#" class="btn select-btn bg-amber-400 text-white">Search</a>
+                                        <button class="btn select-btn bg-amber-400 text-white" onClick={(e)=>handleSearch(e)}>Search</button>
                                     </div>
 
 
