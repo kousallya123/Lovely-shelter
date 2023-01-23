@@ -28,7 +28,7 @@ const login=async(req,res,next)=>{
     const crtpassword= await bcrypt.compare(req.body.password,user.password)
     if(!crtpassword) return  res.status(200).json("Password is incorrect")
 
-    const token=jwt.sign({id:user._id,isAdmin:user.isAdmin})
+    const token=jwt.sign({id:user._id,isAdmin:user.isAdmin},process.env.JWT_SECRET)
 
     const {password,isAdmin,...otherDetails}=user._doc
     
