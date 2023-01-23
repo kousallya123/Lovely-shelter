@@ -10,7 +10,7 @@ const HotelSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    state:{
+    city:{
         type:String,
         required:true
     },
@@ -26,6 +26,9 @@ const HotelSchema=new mongoose.Schema({
         type:[String],
     },
     description:{
+        type:String,
+        required:true
+    },title:{
         type:String,
         required:true
     },
