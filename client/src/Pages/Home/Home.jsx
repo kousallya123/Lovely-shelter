@@ -37,7 +37,7 @@ function Home() {
     }
     return (
         <div>
-            <Preloader />
+            {/* <Preloader /> */}
             <Navbar />
 
             <div class="slider-area ">
